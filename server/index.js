@@ -1,15 +1,15 @@
 import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
 import R from 'ramda'
-import { resolve } from 'path';
+import { resolve } from 'path'
 
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 10010
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
-config.dev = !(app.env === 'production')
+config.dev = !(process.env === 'production')
 
-const MIDDLEWARES = ['router']
+const MIDDLEWARES = ['database', 'routes']
 const r = path => resolve(__dirname, path)
 
 class Server {
@@ -27,8 +27,6 @@ class Server {
   }
 
   async start() {
-
-
     // Instantiate nuxt.js
     const nuxt = new Nuxt(config)
 
@@ -38,7 +36,7 @@ class Server {
       await builder.build()
     }
 
-    app.use(async (ctx, next) => {
+    this.app.use(async (ctx, next) => {
       await next()
       ctx.status = 200 // koa defaults to 404 when it sees that status is unset
       return new Promise((resolve, reject) => {
@@ -51,7 +49,7 @@ class Server {
       })
     })
 
-    app.listen(port, host)
+    this.app.listen(port, host)
     console.log('Server listening on ' + host + ':' + port) // eslint-disable-line no-console
   }
 }
