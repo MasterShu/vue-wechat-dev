@@ -6,14 +6,11 @@ export const routes = app => {
   const router = new Router()
 
   router.get('/wechat', (ctx, next) => {
+    require('../wechat')
     const token = Configs.wechat.token
     const {signature, nonce, timestamp, echostr} = ctx.query
-    console.log(ctx.query)
     const str = [token, timestamp, nonce].sort().join('')
     const sha = sha1(str)
-    console.log(sha)
-    console.log(echostr)
-    console.log(sha === signature)
     if (sha === signature) {
       ctx.body = echostr
     } else {

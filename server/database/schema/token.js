@@ -27,7 +27,7 @@ TokenSchema.pre('save', (next) => {
   next()
 })
 
-TokenSchema.static = {
+TokenSchema.statics = {
   async getAccessToken() {
     const token = await this.findOne({
       name: 'access_token'
@@ -36,6 +36,7 @@ TokenSchema.static = {
   },
 
   async saveAccessToken(data) {
+    console.log(data)
     let token = await this.findOne({
       name: 'access_token'
     }).exec()
