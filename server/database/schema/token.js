@@ -18,7 +18,8 @@ const TokenSchema = new Schema({
   }
 })
 
-TokenSchema.pre('save', (next) => {
+TokenSchema.pre('save', function (next) {
+  console.log('is this', this)
   if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
   } else {
@@ -50,7 +51,12 @@ TokenSchema.statics = {
         expires_in: data.expires_in
       })
     }
-    await token.save()
+    try {
+      await token.save()
+    } catch (e) {
+      console.log('存储失败')
+      console.log(e)
+    }
     return data
   }
 }
