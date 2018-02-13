@@ -27,17 +27,16 @@ export default function (opts, reply) {
       })
 
       const content = await util.parseXML(data)
-      // const message = util.formatMess  age(content.xml)
+      const message = util.formatMessage(content.xml)
 
-      ctx.weixin = {}
-      // ctx.weixin = message
+      ctx.weixin = message
+      console.log(message, 'is message')
 
       await reply.apply(ctx, [ctx, next])
       const replyBody = ctx.body
-      // const msg = ctx.weixin
-      // const xml = util.tpl(replyBody, msg)
+      const msg = ctx.weixin
+      const xml = util.tpl(replyBody, msg)
 
-      const xml = `<xml><ToUserName><![CDATA[${content.xml.FromUserName[0]}]]></ToUserName><FromUserName><![CDATA[${content.xml.ToUserName[0]}]]></FromUserName><CreateTime>${content.xml.CreateTime}</CreateTime><MsgType><![CDATA[${content.xml.MsgType}]]></MsgType><Content><![CDATA[${replyBody}]]></Content></xml>`
       ctx.status = 200
       ctx.type = 'application/xml'
       ctx.body = xml
